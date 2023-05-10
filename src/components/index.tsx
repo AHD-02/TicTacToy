@@ -16,7 +16,11 @@ const TicTacGame = () => {
     const newData = [...data]; // create a copy of the current state array
     newData[index] = { trig: isCrossTurn ? "cross" : "zero" }; // update the item at the specified index
     setData(newData); // set the new array as the updated state
-  };
+    if (resolveWinningTheGame(newData).won === false && newData.every((item) => item.trig !== "empty")) {
+        // All squares are filled and no one has won
+        setData(Array(9).fill({ trig: "empty" }));
+    }
+  }
 
   return (
     <Grid container direction="column">
