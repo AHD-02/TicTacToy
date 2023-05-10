@@ -1,11 +1,11 @@
 import "./App.css";
-import TicTacGame from "./components";
+import { TicTacGameWithComputer } from "./components";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <TicTacGame />
+        <TicTacGameWithComputer />
       </header>
     </div>
   );

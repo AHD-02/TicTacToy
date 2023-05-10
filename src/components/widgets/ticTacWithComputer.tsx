@@ -1,27 +1,49 @@
 import { Grid, Button } from "@mui/material";
 import { useState } from "react";
-import GameSquare from "./widgets/sqr";
-import WinModal from "./widgets/winingModal";
-import { resolveWinningTheGame } from "./utils";
+import { resolveWinningTheGame } from "../utils";
+import GameSquare from "./sqr";
+import WinModal from "./winingModal";
 
-const TicTacGame = () => {
+
+const TicTacGameWithComputer = () => {
   // creating an array of 9 objects with a trig key to change it when clicking
   const [data, setData] = useState<Array<{ trig: string }>>(
     Array(9).fill({ trig: "empty" })
   );
-  // determine weither if its cross or zero turn
-  const [isCrossTurn, setTurn] = useState<boolean>(true);
+
 
   const triggerAtIndex = (index: number) => {
     const newData = [...data]; // create a copy of the current state array
-    newData[index] = { trig: isCrossTurn ? "cross" : "zero" }; // update the item at the specified index
+    newData[index] = { trig: "cross" }; // update the item at the specified index
     setData(newData); // set the new array as the updated state
     if (resolveWinningTheGame(newData).won === false && newData.every((item) => item.trig !== "empty")) {
         // All squares are filled and no one has won
         setData(Array(9).fill({ trig: "empty" }));
     }
+    // call the function to make the computer move
+    setTimeout(() => makeComputerMove(newData), 200);
   }
 
+  const makeComputerMove = (gameData: Array<{ trig: string }>) => {
+    if (resolveWinningTheGame(gameData).won || gameData.every((item) => item.trig !== "empty")) {
+        return; // Game is over, no need to make a move
+    }
+    let availableSquares: number[] = [];
+    gameData.forEach((item, index) => {
+        if (item.trig === "empty") {
+            availableSquares.push(index);
+        }
+    });
+    const randomIndex = availableSquares[Math.floor(Math.random() * availableSquares.length)];
+    const newData = [...gameData];
+    newData[randomIndex] = { trig: "zero" };
+    setData(newData);
+    if (resolveWinningTheGame(newData).won === false && newData.every((item) => item.trig !== "empty")) {
+        // All squares are filled and no one has won
+        setData(Array(9).fill({ trig: "empty" }));
+    }
+  }
+  
   return (
     <Grid container direction="column">
       {[0, 1, 2].map((rowIndex) => (
@@ -41,11 +63,8 @@ const TicTacGame = () => {
               <GameSquare
                 key={index}
                 trig={data[index].trig}
-                onClick={() => {
-                  triggerAtIndex(index);
-                  setTurn(!isCrossTurn);
-                }}
-                isDisabeled={data[index].trig != 'empty'}
+                onClick={() => triggerAtIndex(index)}
+                isDisabled={data[index].trig !== 'empty'}
               />
             );
           })}
@@ -67,4 +86,4 @@ const TicTacGame = () => {
   );
 };
 
-export default TicTacGame;
+export default TicTacGameWithComputer;

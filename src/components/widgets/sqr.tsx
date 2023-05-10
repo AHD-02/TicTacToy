@@ -5,29 +5,19 @@ import { StyledSqr, StyledText } from "./styles";
 type IProps = {
     trig: string;
     onClick: () => void;
-    isDisabeled: boolean;
+    isDisabled: boolean;
 }
 
-const GameSquare = ({ onClick, trig, isDisabeled }: IProps) => {
+const GameSquare = ({ onClick, trig, isDisabled }: IProps) => {
     return(
         <StyledSqr 
-           {...(isDisabeled) ? {} : {
+           {...(isDisabled) ? {} : {
             onClick: onClick
            }}
         >
-            {trig == "cross" ? 
-                <StyledText>
-                  X
-                </StyledText> 
-            :
-            trig == "zero" ? 
-               <StyledText>
-                 O
-               </StyledText> 
-            : 
-            ""
-            }
-
+            <StyledText>
+                {trig == "cross" ? "X" : trig == "zero" ? "O" : ""}
+            </StyledText>
         </StyledSqr>
     )
 }
